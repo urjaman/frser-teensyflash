@@ -1,6 +1,10 @@
+# Cygwin example
+# TEENSYDIR = /cygdrive/c/Program\ Files/Arduino/hardware/tools
 
-TCDIR = /cygdrive/c/Program\ Files/Arduino/hardware/tools/arm-none-eabi/bin/
-TEENSYDIR = /cygdrive/c/Program\ Files/Arduino/hardware/tools
+# Linux example
+TEENSYDIR = /home/urjaman/fakeduino/arduino-1.0.6/hardware/tools
+
+TCDIR = $(TEENSYDIR)/arm-none-eabi/bin/
 
 CDEPS = Makefile
 
@@ -35,9 +39,12 @@ $(TARGET).elf: $(OBJS) lib/mk20dx256.ld lib/core.a
 	$(SIZE) $<
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
 
-program: $(TARGET).hex
+program-win: $(TARGET).hex
 	$(TEENSYDIR)/teensy_post_compile -file=$(basename $@) -path="$(shell cygpath -w `pwd`)" -tools="$(shell cygpath -w $(TEENSYDIR))"
 	-$(TEENSYDIR)/teensy_reboot
+
+program-cli: $(TARGET).hex
+	teensy_loader_cli -mmcu=mk20dx256 -w $(TARGET).hex
 
 clean:
 	-rm -rf *.o $(TARGET).elf $(TARGET).hex

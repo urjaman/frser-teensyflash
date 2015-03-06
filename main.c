@@ -8,8 +8,8 @@ int main(void)
 	GPIOC_PDDR |= _BV(5);
 	while (1) {
 		GPIOC_PSOR = _BV(5);
-		_delay_ms(50);
+		_delay_ms(1000);
 		GPIOC_PCOR = _BV(5);
-		_delay_ms(50);
+		_delay_ms(1000);
 	}
 }

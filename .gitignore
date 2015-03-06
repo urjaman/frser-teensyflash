@@ -2,3 +2,4 @@
 *.d
 main.elf
 main.hex
+lib/core.a
