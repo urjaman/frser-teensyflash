@@ -16,7 +16,11 @@ CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti $(OPTIONS
 LDFLAGS = -Os -Wl,--gc-sections -Wl,--relax -mcpu=cortex-m4 -mthumb -Tlib/mk20dx256.ld
 LIBS = -lm
 
-OBJS = main.o
+#DEPS = $(CDEPS) uart.h main.h flash.h
+#SOURCES = main.c uart.c flash.c
+
+DEPS = $(CDEPS)
+SOURCES = main.c
 
 CC = $(TCDIR)arm-none-eabi-gcc
 CXX = $(TCDIR)arm-none-eabi-g++
@@ -31,8 +35,11 @@ all: $(TARGET).hex
 lib/core.a: $(CDEPS)
 	cd lib && make clean && $(MAKE)
 
-$(TARGET).elf: $(OBJS) lib/mk20dx256.ld lib/core.a
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) lib/core.a
+$(TARGET).elf: local.o lib/mk20dx256.ld lib/core.a
+	$(CC) $(LDFLAGS) -o $@ local.o $(LIBS) lib/core.a
+
+local.o: $(SOURCES) $(DEPS)
+	$(CC) $(CFLAGS) -flto -c -o local.o $(SOURCES)
 
 
 %.hex: %.elf
