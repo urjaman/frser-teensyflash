@@ -38,15 +38,14 @@ extern unsigned long _edata;
 extern unsigned long _sbss;
 extern unsigned long _ebss;
 extern unsigned long _estack;
-//extern void __init_array_start(void);
-//extern void __init_array_end(void);
 
 
 
-extern int main (void);
+extern int main (void) __attribute__((noinline));
 void ResetHandler(void);
 void _init_Teensyduino_internal_(void);
-void __libc_init_array(void);
+//void __libc_init_array(void);
+//void _init(void)__attribute__((externally_visible));
 
 
 void fault_isr(void)
@@ -347,19 +346,20 @@ const uint8_t flashconfigbytes[16] = {
 };
 
 
-// Automatically initialize the RTC.  When the build defines the compile
-// time, and the user has added a crystal, the RTC will automatically
-// begin at the time of the first upload.
-#ifndef TIME_T
-#define TIME_T 1349049600 // default 1 Oct 2012 (never used, Arduino sets this)
-#endif
-extern void rtc_set(unsigned long t);
-
 
 static void startup_default_early_hook(void) { WDOG_STCTRLH = WDOG_STCTRLH_ALLOWUPDATE; }
 static void startup_default_late_hook(void) {}
 void startup_early_hook(void)		__attribute__ ((weak, alias("startup_default_early_hook")));
 void startup_late_hook(void)		__attribute__ ((weak, alias("startup_default_late_hook")));
+
+
+extern void (*__preinit_array_start []) (void) __attribute__((weak));
+extern void (*__preinit_array_end []) (void) __attribute__((weak));
+extern void (*__init_array_start []) (void) __attribute__((weak));
+extern void (*__init_array_end []) (void) __attribute__((weak));
+extern void (*__fini_array_start []) (void) __attribute__((weak));
+extern void (*__fini_array_end []) (void) __attribute__((weak));
+
 
 __attribute__ ((section(".startup")))
 void ResetHandler(void)
@@ -565,13 +565,20 @@ void ResetHandler(void)
 	__enable_irq();
 
 	_init_Teensyduino_internal_();
-	if (RTC_SR & RTC_SR_TIF) {
-		// TODO: this should probably set the time more agressively, if
-		// we could reliably detect the first reboot after programming.
-		rtc_set(TIME_T);
-	}
 
-	__libc_init_array();
+//	__libc_init_array();
+
+
+    /* This is basically libc_init_array -- handles global constructors */
+        unsigned int count;
+        count = __preinit_array_end - __preinit_array_start;
+        for (i = 0; i < count; i++)
+	        __preinit_array_start[i] ();
+
+        count = __init_array_end - __init_array_start;
+        for (i = 0; i < count; i++)
+	        __init_array_start[i] ();
+
 
 	startup_late_hook();
 	main();

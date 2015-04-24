@@ -31,7 +31,6 @@
 #include "core_pins.h"
 #include "HardwareSerial.h"
 #include "usb_serial.h"
-#include "usb_seremu.h"
 
 void yield(void) __attribute__ ((weak));
 void yield(void)
@@ -41,8 +40,14 @@ void yield(void)
 	if (running) return; // TODO: does this need to be atomic?
 	running = 1;
 	if (Serial.available()) serialEvent();
+#ifdef HW_SERIAL1
 	if (Serial1.available()) serialEvent1();
+#endif
+#ifdef HW_SERIAL2
 	if (Serial2.available()) serialEvent2();
+#endif
+#ifdef HW_SERIAL3
 	if (Serial3.available()) serialEvent3();
+#endif
 	running = 0;
 };

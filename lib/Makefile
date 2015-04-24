@@ -39,7 +39,8 @@ all: $(TARGET).a
 $(TARGET).a: $(OBJS)
 	$(AR) rcs $(TARGET).a $(OBJS)
 
-
+mk20dx128.o: mk20dx128.c
+	$(CC) $(CFLAGS) -fno-lto -c -o mk20dx128.o mk20dx128.c
 
 # compiler generated dependency info
 -include $(OBJS:.o=.d)

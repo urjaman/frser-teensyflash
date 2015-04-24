@@ -22,13 +22,6 @@
 
 #include "avr_emulation.h"
 #include "usb_serial.h"
-#include "usb_seremu.h"
-#include "usb_keyboard.h"
-#include "usb_mouse.h"
-#include "usb_joystick.h"
-#include "usb_midi.h"
-#include "usb_rawhid.h"
-#include "usb_flightsim.h"
 
 //#include "WCharacter.h"
 #include "WString.h"
@@ -42,8 +35,6 @@ uint16_t makeWord(byte h, byte l);
 
 unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout = 1000000L);
 
-void tone(uint8_t pin, uint16_t frequency, uint32_t duration = 0);
-void noTone(uint8_t pin);
 
 // WMath prototypes
 uint32_t random(void);

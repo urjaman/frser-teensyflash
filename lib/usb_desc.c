@@ -695,12 +695,6 @@ struct usb_string_descriptor_struct {
 };
 */
 
-extern struct usb_string_descriptor_struct usb_string_manufacturer_name
-        __attribute__ ((weak, alias("usb_string_manufacturer_name_default")));
-extern struct usb_string_descriptor_struct usb_string_product_name
-        __attribute__ ((weak, alias("usb_string_product_name_default")));
-extern struct usb_string_descriptor_struct usb_string_serial_number
-        __attribute__ ((weak, alias("usb_string_serial_number_default")));
 
 struct usb_string_descriptor_struct string0 = {
         4,
@@ -708,17 +702,17 @@ struct usb_string_descriptor_struct string0 = {
         {0x0409}
 };
 
-struct usb_string_descriptor_struct usb_string_manufacturer_name_default = {
+struct usb_string_descriptor_struct usb_string_manufacturer_name = {
         2 + MANUFACTURER_NAME_LEN * 2,
         3,
         MANUFACTURER_NAME
 };
-struct usb_string_descriptor_struct usb_string_product_name_default = {
+struct usb_string_descriptor_struct usb_string_product_name = {
 	2 + PRODUCT_NAME_LEN * 2,
         3,
         PRODUCT_NAME
 };
-struct usb_string_descriptor_struct usb_string_serial_number_default = {
+struct usb_string_descriptor_struct usb_string_serial_number = {
         12,
         3,
         {0,0,0,0,0,0,0,0,0,0}
@@ -743,9 +737,9 @@ void usb_init_serialnumber(void)
 	for (i=0; i<10; i++) {
 		char c = buf[i];
 		if (!c) break;
-		usb_string_serial_number_default.wString[i] = c;
+		usb_string_serial_number.wString[i] = c;
 	}
-	usb_string_serial_number_default.bLength = i * 2 + 2;
+	usb_string_serial_number.bLength = i * 2 + 2;
 }
 
 
