@@ -10,8 +10,8 @@ CDEPS = Makefile
 
 TARGET = main
 
-OPTIONS = -DF_CPU=72000000 -DUSB_SERIAL -D__MK20DX256__ -DTEENSYDUINO=120 -flto
-CFLAGS = -Wall -g -Os -mcpu=cortex-m4 -mthumb -nostdlib -Ilib $(OPTIONS)
+OPTIONS = -DF_CPU=48000000 -DUSB_SERIAL -D__MK20DX256__ -DTEENSYDUINO=120 -flto
+CFLAGS = -Wall -g -Os -mcpu=cortex-m4 -mthumb -nostdlib -fno-strict-aliasing -Ilib $(OPTIONS)
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti $(OPTIONS)
 LDFLAGS = -Os -Wl,--gc-sections -Wl,--relax -mcpu=cortex-m4 -mthumb -Tlib/mk20dx256.ld
 LIBS = -lm
@@ -25,10 +25,13 @@ OBJCOPY = $(TCDIR)arm-none-eabi-objcopy
 
 export OPTIONS CFLAGS CXXFLAGS TCDIR CC CXX AR
 
-DEPS = $(CDEPS)
-SOURCES = main.c
+DEPS = $(CDEPS) main.h flash.h mybool.h
+SOURCES = main.c uart.c flash.c spihw.c
 
-#include libfrser/Makefile.frser
+include libfrser/Makefile.frser
+include libfrser/Makefile.spilib
+include libfrser/Makefile.lpcfwh
+
 
 
 all: $(TARGET).hex
@@ -37,7 +40,7 @@ lib/core.a: $(CDEPS)
 	cd lib && make clean && $(MAKE)
 
 $(TARGET).elf: $(SOURCES) $(DEPS) lib/mk20dx256.ld lib/core.a
-	$(CC) $(CFLAGS) $(LDFLAGS) -flto -fwhole-program -o $@ $(SOURCES) $(LIBS) lib/core.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -I. -fwhole-program -o $@ $(SOURCES) $(LIBS) lib/core.a
 
 
 #$(TARGET).elf: local.o lib/mk20dx256.ld lib/core.a
