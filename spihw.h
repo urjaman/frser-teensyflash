@@ -9,7 +9,7 @@ uint8_t spi_uninit(void);
 uint8_t spi_txrx(const uint8_t c);
 void spi_init_cond(void);
 
-#define spi_select()
-#define spi_deselect()
+void spi_select(void);
+void spi_deselect(void);
 
 #endif

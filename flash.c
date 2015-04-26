@@ -12,6 +12,7 @@ void flash_portclear(void) {
 }
 
 void flash_set_safe(void) {
+	spi_uninit();
 	flash_portclear();
 }
 

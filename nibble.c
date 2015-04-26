@@ -20,7 +20,7 @@
 #include "nibble.h"
 
 #define delay() asm volatile ("nop")
-#define swap(x) do { x = ((x)>>4)&0xF | ((x)<<4)&0xF0; } while(0)
+#define swap(x) do { x = (((x)>>4)&0xF) | (((x)<<4)&0xF0); } while(0)
 
 
 
