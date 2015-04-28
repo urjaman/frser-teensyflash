@@ -13,9 +13,24 @@ void flash_portclear(void) {
 
 void flash_set_safe(void) {
 	spi_uninit();
+	nibble_cleanup();
 	flash_portclear();
 }
 
+uint8_t flash_plausible_protocols(void) {
+	uint8_t p = SUPPORTED_BUSTYPES;
+	uint8_t s = SUPPORTED_BUSTYPES & CHIP_BUSTYPE_SPI;
+	flash_portclear();
+	if ((p&CHIP_BUSTYPE_LPC)&&(lpc_test())) {
+		s |= CHIP_BUSTYPE_LPC;
+	}
+	flash_portclear();
+	if ((p&CHIP_BUSTYPE_FWH)&&(fwh_test())) {
+		s |= CHIP_BUSTYPE_FWH;
+	}
+	flash_select_protocol(s);
+	return s;
+}
 
 void flash_select_protocol(uint8_t allowed_protocols) {
 	allowed_protocols &= SUPPORTED_BUSTYPES;
