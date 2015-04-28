@@ -33,6 +33,6 @@ void nibble_hw_init(void);
 void nibble_set_dir(uint8_t dir);
 uint8_t nibble_read(void);
 void nibble_write(uint8_t data);
-#define clock_cycle()
+void clock_cycle(void);
 
 #endif /* NIBBLE_H_ */

@@ -19,132 +19,124 @@
 #include "main.h"
 #include "nibble.h"
 
-#define delay() asm volatile ("nop")
-#define swap(x) do { x = (((x)>>4)&0xF) | (((x)<<4)&0xF0); } while(0)
+#define delay() _delay_us(1)
 
 
-
-#define FRAME_DDR			DDRD
-#define FRAME_PORT			PORTD
-#define FRAME				PD3
-
-
-#define INIT_DDR			DDRD
-#define INIT_PORT			PORTD
-#define INIT				PD4
+/* CLK: PC0
+ * FRAME: PC1
+ * INIT: PC6
+ * RST: PC7
+ * LAD0: PD4
+ * LAD1: PD5
+ * LAD2: PD6
+ * LAD3: PD7
+ */
 
 void nibble_set_dir(uint8_t dir) {
-//	if (!dir) {
-//		DDRC = 0;
-//	}
+	if (!dir) {
+		GPIOD_PDDR &= ~(0xF0);
+	} else {
+		GPIOD_PDDR |= 0xF0;
+	}
 }
 
 uint8_t nibble_read(void) {
-//	uint8_t rv;
-//	rv = PINC & 0xF;
-	return 0;
+	return (GPIOD_PDIR>>4)&0x0F;
 }
 
 static void nibble_write_hi(uint8_t data) {
-//	swap(data);
-//	DDRC = (~data) & 0xF;
-//	data &= 0xF;
-//	while ((PINC & 0xF) != data);
+	GPIOD_PDOR = (GPIOD_PDOR & ~0xF0) | (data & 0xF0);
 }
 
 void nibble_write(uint8_t data) {
-//	DDRC = (~data) & 0xF;
-//	data &= 0xF;
-//	while ((PINC & 0xF) != data);
+	GPIOD_PDOR = (GPIOD_PDOR & ~0xF0) | (data << 4);
 }
 
-#define clock_low() do { CLK_PORT &= ~_BV(CLK); } while(0)
-#define clock_high() do { CLK_PORT |= _BV(CLK); } while(0)
+#define clock_low() do { GPIOC_PCOR = _BV(0); delay(); } while(0)
+#define clock_high() do { GPIOC_PSOR = _BV(0); delay(); } while(0)
 
+void clock_cycle(void) {
+	clock_low();
+	delay();
+	clock_high();
+}
 
 
 bool nibble_init(void) {
-#if 0
-	uint8_t i;
+	int i;
 
-	INIT_PORT &= ~_BV(INIT);
-	INIT_DDR |= _BV(INIT);
+	GPIOC_PCOR = _BV(6); // INIT=0
 
-	CLK_DDR |= _BV(CLK);
-	CLK_PORT |= _BV(CLK);
+	clock_high();
 
-	FRAME_DDR |= _BV(FRAME);
-	FRAME_PORT |=  _BV(FRAME);
+	GPIOC_PSOR = _BV(1); // FRAME
 
 	nibble_set_dir(OUTPUT);
 	nibble_write(0);
 
 	for (i = 0; i < 24; i++)
 		clock_cycle();
-	INIT_DDR &= ~_BV(INIT);
-	_delay_us(1); // Let pullup work
+	GPIOC_PSOR = _BV(6); // INIT=1
 	for (i = 0; i < 42; i++)
 		clock_cycle();
 
-#endif
 	return true;
 }
 
 void nibble_cleanup(void) {
-#if 0
-	CLK_DDR &= ~_BV(CLK);
-	FRAME_DDR &= ~_BV(FRAME);
+	GPIOC_PDDR &= ~(_BV(7) | _BV(6) | _BV(1) | _BV(0));
 	nibble_set_dir(INPUT);
-#endif
 }
 
 void clocked_nibble_write(uint8_t value) {
-#if 0
 	clock_low();
 	nibble_write(value);
 	clock_high();
-#endif
 }
 
 void clocked_nibble_write_hi(uint8_t value) {
-#if 0
 	clock_low();
 	nibble_write_hi(value);
 	clock_high();
-#endif
 }
 
 uint8_t clocked_nibble_read(void) {
-#if 0
 	clock_cycle();
 	delay();
 	delay();
 	return nibble_read();
-#else
-	return 0;
-#endif
 }
 
 void nibble_start(uint8_t start) {
-#if 0
-	FRAME_PORT |= _BV(FRAME);
+	GPIOC_PSOR = _BV(1); // FRAME=1
 	nibble_set_dir(OUTPUT);
 	clock_high();
-	FRAME_PORT &= ~_BV(FRAME);
+	GPIOC_PCOR = _BV(1); // FRAME=0
 	nibble_write(start);
 	clock_cycle();
-	FRAME_PORT |= _BV(FRAME);
-#endif
+	GPIOC_PSOR = _BV(1); // FRAME=1
 }
 
-void nibble_hw_init(void) {
-	/* Do your port init if needed etc... */
 
-#if 0
+void nibble_hw_init(void) {
+	/* Port Init */
+	PORTC_PCR0 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTC_PCR1 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTC_PCR6 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTC_PCR7 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+
+	PORTD_PCR4 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTD_PCR5 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTD_PCR6 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+	PORTD_PCR7 = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_PE | PORT_PCR_PS;
+
+	GPIOC_PDDR |= _BV(7) | _BV(6) | _BV(1) | _BV(0);
+	GPIOC_PSOR = _BV(7) | _BV(6) | _BV(1) | _BV(0);
+	GPIOD_PDDR &= ~(0xF0);
+	GPIOD_PSOR = 0xF0;
+
 	/* Kick reset here so lpc/fwh.c doesnt need to know about how it is controlled. */
-	DDRD |= _BV(2); //!RST
+	GPIOC_PCOR = _BV(7); // RST=0
 	_delay_us(1);
-	DDRD &= ~_BV(2);
-	_delay_us(1); // slow pullup
-#endif
+	GPIOC_PSOR = _BV(7); // RST=1
 }
