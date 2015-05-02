@@ -35,4 +35,11 @@
 #define RAMSTART 0
 #define RAMEND 0xFFF
 
+/* Hooks to use the LED as a "busy" indicator + usb serial flush. */
+
+#define FRSER_FEAT_PRE_OPRX_HOOK()  do { if (!usbs_has_data()) usb_serial_flush_output(); \
+						LED_OFF(); } while(0)
+
+#define FRSER_FEAT_POST_OPRX_HOOK() do { LED_ON(); } while(0)
+
 #endif
