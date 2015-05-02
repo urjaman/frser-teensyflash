@@ -30,30 +30,7 @@
 
 #include "core_pins.h"
 #include "pins_arduino.h"
-#include "HardwareSerial.h"
 
-#if 0
-// moved to pins_arduino.h
-struct digital_pin_bitband_and_config_table_struct {
-	volatile uint32_t *reg;
-	volatile uint32_t *config;
-};
-const struct digital_pin_bitband_and_config_table_struct digital_pin_to_info_PGM[];
-
-// compatibility macros
-#define digitalPinToPort(pin) (pin)
-#define digitalPinToBitMask(pin) (1)
-#define portOutputRegister(pin) ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 0))
-#define portSetRegister(pin)    ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 32))
-#define portClearRegister(pin)  ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 64))
-#define portToggleRegister(pin) ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 96))
-#define portInputRegister(pin)  ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 128))
-#define portModeRegister(pin)   ((volatile uint8_t *)(digital_pin_to_info_PGM[(pin)].reg + 160))
-#define portConfigRegister(pin) ((volatile uint32_t *)(digital_pin_to_info_PGM[(pin)].config))
-#endif
-
-//#define digitalPinToTimer(P) ( pgm_read_byte( digital_pin_to_timer_PGM + (P) ) )
-//#define analogInPinToBit(P) (P)
 
 #define GPIO_BITBAND_ADDR(reg, bit) (((uint32_t)&(reg) - 0x40000000) * 32 + (bit) * 4 + 0x42000000)
 #define GPIO_BITBAND_PTR(reg, bit) ((uint32_t *)GPIO_BITBAND_ADDR((reg), (bit)))
@@ -287,17 +264,18 @@ void rtc_compensate(int adjust)
 
 void init_rtc(void)
 {
-	serial_print("init_rtc\n");
+	//serial_print("init_rtc\n");
 	//SIM_SCGC6 |= SIM_SCGC6_RTC;
 
 	// enable the RTC crystal oscillator, for approx 12pf crystal
 	if (!(RTC_CR & RTC_CR_OSCE)) {
-		serial_print("start RTC oscillator\n");
+		//serial_print("start RTC oscillator\n");
 		RTC_SR = 0;
 		RTC_CR = RTC_CR_SC16P | RTC_CR_SC4P | RTC_CR_OSCE;
 	}
 	// should wait for crystal to stabilize.....
 
+#if 0
 	serial_print("SR=");
 	serial_phex32(RTC_SR);
 	serial_print("\n");
@@ -310,6 +288,7 @@ void init_rtc(void)
 	serial_print("TCR=");
 	serial_phex32(RTC_TCR);
 	serial_print("\n");
+#endif
 
 	if (RTC_SR & RTC_SR_TIF) {
 		// enable the RTC
@@ -752,7 +731,7 @@ uint32_t pulseIn_high(volatile uint8_t *reg, uint32_t timeout)
 {
 	uint32_t timeout_count = timeout * PULSEIN_LOOPS_PER_USEC;
 	uint32_t usec_start, usec_stop;
-	
+
 	// wait for any previous pulse to end
 	while (*reg) {
 		if (--timeout_count == 0) return 0;
@@ -774,7 +753,7 @@ uint32_t pulseIn_low(volatile uint8_t *reg, uint32_t timeout)
 {
 	uint32_t timeout_count = timeout * PULSEIN_LOOPS_PER_USEC;
 	uint32_t usec_start, usec_stop;
-	
+
 	// wait for any previous pulse to end
 	while (!*reg) {
 		if (--timeout_count == 0) return 0;
