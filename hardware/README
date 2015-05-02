@@ -1,0 +1,11 @@
+There be the EAGLE files (.sch,.brd) here,
+gerbers in the .zip.
+And the board is also shared in oshpark:
+https://oshpark.com/shared_projects/izukIxq8
+
+It is actually a bit tricky to build,
+but i managed it. Dont short the PLCC
+pins to the pin holes and dont
+push the pins through the holes,
+just in the holes, because the PLCC
+socket goes above them.
