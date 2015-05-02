@@ -19,14 +19,54 @@
 #include "main.h"
 #include "uart.h"
 
+static int usb_rxbuf_wp = 0;
+static int usb_rxbuf_rp = 0;
+
+static uint8_t usb_rxbuf[UART_BUFLEN];
+
+static void usb_rxbuf_put(uint8_t b)
+{
+	usb_rxbuf[usb_rxbuf_wp++] = b;
+	if (usb_rxbuf_wp >= UART_BUFLEN) usb_rxbuf_wp = 0;
+}
+
+static int usb_rxbuf_get(void)
+{
+	int r = -1;
+	if (usb_rxbuf_rp != usb_rxbuf_wp) {
+		r = usb_rxbuf[usb_rxbuf_rp++];
+		if (usb_rxbuf_rp >= UART_BUFLEN) usb_rxbuf_rp = 0;
+	}
+	return r;
+}
+
 /* Wrap out the -1 return ... */
-uint8_t usb_recv(void) {
+uint8_t usbs_recv(void) {
 	int c=-1;
 	do {
-		if (usb_serial_available()) {
-			c = usb_serial_getchar();
+		while (usb_serial_available()) {
+			usb_rxbuf_put(usb_serial_getchar());
 		}
+		c = usb_rxbuf_get();
 		yield();
 	} while(c==-1);
 	return c;
+}
+
+int usbs_has_data(void) {
+	if (usb_rxbuf_wp != usb_rxbuf_rp) return 1;
+	return usb_serial_available();
+}
+
+void usbs_send(uint8_t b) {
+	int c = -1;
+	do {
+		while (usb_serial_available()) {
+			usb_rxbuf_put(usb_serial_getchar());
+		}
+		if (usb_serial_write_buffer_free()) {
+			c = usb_serial_putchar(b);
+		}
+		yield();
+	} while (c==-1);
 }
