@@ -19,8 +19,10 @@
 #include "main.h"
 #include "nibble.h"
 
-#define delay() _delay_us(1)
 
+#define nopx() asm volatile("nop")
+
+#define delay() nopx()
 
 /* CLK: PC0
  * FRAME: PC1
