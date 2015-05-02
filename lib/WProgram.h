@@ -25,15 +25,11 @@
 //#include "WCharacter.h"
 #include "WString.h"
 #include "elapsedMillis.h"
-#include "IntervalTimer.h"
 
 uint16_t makeWord(uint16_t w);
 uint16_t makeWord(byte h, byte l);
 
 #define word(...) makeWord(__VA_ARGS__)
-
-unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout = 1000000L);
-
 
 // WMath prototypes
 uint32_t random(void);

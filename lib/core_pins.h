@@ -688,11 +688,6 @@ static inline uint8_t digitalReadFast(uint8_t pin)
 
 void pinMode(uint8_t pin, uint8_t mode);
 void init_pins(void);
-void analogWrite(uint8_t pin, int val);
-void analogWriteRes(uint32_t bits);
-static inline void analogWriteResolution(uint32_t bits) { analogWriteRes(bits); }
-void analogWriteFrequency(uint8_t pin, uint32_t frequency);
-void analogWriteDAC0(int val);
 #ifdef __cplusplus
 void attachInterruptVector(IRQ_NUMBER_t irq, void (*function)(void));
 #else
@@ -702,12 +697,6 @@ void attachInterrupt(uint8_t pin, void (*function)(void), int mode);
 void detachInterrupt(uint8_t pin);
 void _init_Teensyduino_internal_(void);
 
-int analogRead(uint8_t pin);
-void analogReference(uint8_t type);
-void analogReadRes(unsigned int bits);
-static inline void analogReadResolution(unsigned int bits) { analogReadRes(bits); }
-void analogReadAveraging(unsigned int num);
-void analog_init(void);
 
 #define DEFAULT         0
 #define INTERNAL        2
@@ -715,7 +704,6 @@ void analog_init(void);
 #define INTERNAL1V1     2
 #define EXTERNAL        0
 
-int touchRead(uint8_t pin);
 
 
 static inline void shiftOut(uint8_t, uint8_t, uint8_t, uint8_t) __attribute__((always_inline, unused));
