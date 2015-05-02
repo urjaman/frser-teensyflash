@@ -54,8 +54,8 @@ void nibble_write(uint8_t data) {
 	GPIOD_PDOR = (GPIOD_PDOR & ~0xF0) | (data << 4);
 }
 
-#define clock_low() do { GPIOC_PCOR = _BV(0); delay(); } while(0)
-#define clock_high() do { GPIOC_PSOR = _BV(0); delay(); } while(0)
+#define clock_low() do { GPIOC_PCOR = _BV(0); } while(0)
+#define clock_high() do { GPIOC_PSOR = _BV(0); } while(0)
 
 void clock_cycle(void) {
 	clock_low();
@@ -104,7 +104,6 @@ void clocked_nibble_write_hi(uint8_t value) {
 
 uint8_t clocked_nibble_read(void) {
 	clock_cycle();
-	delay();
 	delay();
 	return nibble_read();
 }
