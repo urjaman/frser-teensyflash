@@ -38,7 +38,7 @@ lib/core.a: $(CDEPS)
 	cd lib && make clean && $(MAKE)
 
 $(TARGET).elf: $(SOURCES) $(DEPS) lib/mk20dx256.ld lib/core.a
-	$(CC) $(CFLAGS) $(LDFLAGS) -I.  -o $@ $(SOURCES) $(LIBS) lib/core.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -I. -flto -flto-partition=none -fwhole-program  -o $@ $(SOURCES) $(LIBS) lib/core.a
 
 %.hex: %.elf
 	$(SIZE) $<
