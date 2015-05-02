@@ -56,4 +56,4 @@ clean:
 	-rm -rf *.o $(TARGET).elf $(TARGET).hex
 
 objdump: $(TARGET).elf
-	$(TCDIR)arm-none-eabi-objdump -xdSC $(TARGET).elf | less
+	$(TCDIR)arm-none-eabi-objdump -xdC $(TARGET).elf | less
