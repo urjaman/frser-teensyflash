@@ -1,7 +1,7 @@
 /*
-	This file was part of bbflash, now frser-m328lpcspi.
+	This file was part of bbflash, now frser-teensyflash.
 	Copyright (C) 2013, Hao Liu and Robert L. Thompson
-	Copyright (C) 2013 Urja Rannikko <urjaman@gmail.com>
+	Copyright (C) 2013,2015 Urja Rannikko <urjaman@gmail.com>
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
