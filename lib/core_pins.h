@@ -811,15 +811,51 @@ static inline void delayMicroseconds(uint32_t usec)
 	);
 }
 
+
+
+
+static inline void _delay_ns(uint32_t) __attribute__((always_inline, unused));
+static inline void _delay_ns(uint32_t nsec)
+{
+#if F_CPU == 168000000
+	uint32_t n = nsec / 17;
+#elif F_CPU == 144000000
+	uint32_t n = nsec / 20;
+#elif F_CPU == 120000000
+	uint32_t n = nsec / 25;
+#elif F_CPU == 96000000
+	uint32_t n = nsec / 31;
+#elif F_CPU == 72000000
+	uint32_t n = nsec / 41;
+#elif F_CPU == 48000000
+	uint32_t n = nsec / 62;
+#elif F_CPU == 24000000
+	uint32_t n = nsec / 125;
+#elif F_CPU == 16000000
+	uint32_t n = nsec / 250;
+#elif F_CPU == 8000000
+	uint32_t n = nsec / 500;
+#elif F_CPU == 4000000
+	uint32_t n = nsec / 1000;
+#elif F_CPU == 2000000
+	uint32_t n = nsec / 2000;
+#endif
+	if (n == 0) return;
+	__asm__ volatile(
+		"L_%=_delayns:"		"\n\t"
+#if F_CPU < 24000000
+		"nop"				"\n\t"
+#endif
+		"subs   %0, #1"			"\n\t"
+		"bne    L_%=_delayns"		"\n"
+		: "+r" (n) :
+	);
+}
+
+
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
-
-
 
 
 #ifdef __cplusplus
