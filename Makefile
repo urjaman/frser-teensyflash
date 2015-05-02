@@ -6,11 +6,11 @@ TEENSYDIR = /home/urjaman/fakeduino/arduino-1.0.6/hardware/tools
 
 TCDIR = $(TEENSYDIR)/arm-none-eabi/bin/
 
-CDEPS = Makefile
+CDEPS := Makefile $(wildcard lib/*.cpp) $(wildcard lib/*.c) $(wildcard lib/*.h)
 
 TARGET = main
 
-OPTIONS = -DF_CPU=48000000 -DUSB_SERIAL -D__MK20DX256__ -DTEENSYDUINO=120
+OPTIONS = -DF_CPU=48000000 -DUSB_SERIAL -D__MK20DX256__
 CFLAGS = -Wall -g -Os -mcpu=cortex-m4 -mthumb -nostdlib -fno-strict-aliasing -Ilib $(OPTIONS)
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti $(OPTIONS)
 LDFLAGS = -Os -Wl,--gc-sections -Wl,--relax -mcpu=cortex-m4 -mthumb -Tlib/mk20dx256.ld
@@ -32,8 +32,6 @@ include libfrser/Makefile.frser
 include libfrser/Makefile.spilib
 include libfrser/Makefile.lpcfwh
 
-
-
 all: $(TARGET).hex
 
 lib/core.a: $(CDEPS)
@@ -41,14 +39,6 @@ lib/core.a: $(CDEPS)
 
 $(TARGET).elf: $(SOURCES) $(DEPS) lib/mk20dx256.ld lib/core.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -I.  -o $@ $(SOURCES) $(LIBS) lib/core.a
-
-
-#$(TARGET).elf: local.o lib/mk20dx256.ld lib/core.a
-#	$(CC) $(LDFLAGS) -o $@ local.o $(LIBS) lib/core.a
-
-#local.o: $(SOURCES) $(DEPS)
-#	$(CC) $(CFLAGS) -flto -c -o local.o $(SOURCES)
-
 
 %.hex: %.elf
 	$(SIZE) $<

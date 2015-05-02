@@ -3,7 +3,7 @@
 TARGET = core
 
 # configurable options
-OPTIONS ?= -DF_CPU=72000000 -DUSB_SERIAL -DLAYOUT_US_ENGLISH -D__MK20DX256__ -DTEENSYDUINO=120
+OPTIONS ?= -DF_CPU=48000000 -DUSB_SERIAL -D__MK20DX256__
 
 
 # compiler options for C only
