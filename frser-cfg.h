@@ -19,7 +19,7 @@
 //#define FRSER_FEAT_DBG_CONSOLE
 
 /* Name provided to flashrom to identify what the thing is. Max 16 bytes */
-#define FRSER_NAME "USB TeensyFlash"
+#define FRSER_NAME "Teensy LPC+SPI"
 
 /* Attached address lines, only if FRSER_FEAT_PARALLEL */
 //#define FRSER_PARALLEL_BITS 19
