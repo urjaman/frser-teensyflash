@@ -347,9 +347,7 @@ const uint8_t flashconfigbytes[16] = {
 
 
 
-static void startup_default_early_hook(void) { WDOG_STCTRLH = WDOG_STCTRLH_ALLOWUPDATE; }
 static void startup_default_late_hook(void) {}
-void startup_early_hook(void)		__attribute__ ((weak, alias("startup_default_early_hook")));
 void startup_late_hook(void)		__attribute__ ((weak, alias("startup_default_late_hook")));
 
 
@@ -375,9 +373,8 @@ void ResetHandler(void)
 	WDOG_UNLOCK = WDOG_UNLOCK_SEQ2;
 	__asm__ volatile ("nop");
 	__asm__ volatile ("nop");
-	// programs using the watchdog timer or needing to initialize hardware as
-	// early as possible can implement startup_early_hook()
-	startup_early_hook();
+
+	WDOG_STCTRLH = WDOG_STCTRLH_ALLOWUPDATE;
 
 	// enable clocks to always-used peripherals
 #if defined(__MK20DX128__)

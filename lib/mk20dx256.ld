@@ -79,7 +79,6 @@ SECTIONS
 		/* TODO: does linker detect startup overflow onto flashconfig? */
 		. = 0x400;
 		KEEP(*(.flashconfig*))
-		*(.text*)
 		*(.rodata*)
 		. = ALIGN(4);
 		KEEP(*(.init))
@@ -119,6 +118,7 @@ SECTIONS
 	.data : AT (_etext) {
 		. = ALIGN(4);
 		_sdata = .; 
+		*(.text*)
 		*(.fastrun*)
 		*(.data*)
 		. = ALIGN(4);
