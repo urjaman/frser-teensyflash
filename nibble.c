@@ -105,6 +105,9 @@ void clocked_nibble_write_hi(uint8_t value) {
 uint8_t clocked_nibble_read(void) {
 	clock_cycle();
 	delay();
+#if F_CPU > 48000000
+	delay();
+#endif
 	return nibble_read();
 }
 
