@@ -14,7 +14,7 @@
 /* If your system is capable of autodetecting the actual attached chip bustype. */
 #define FRSER_FEAT_DYNPROTO
 /* If your system is capable of turning on/off chip drivers. */
-//#define FRSER_FEAT_PIN_STATE
+#define FRSER_FEAT_PIN_STATE
 /* If you have a debug console you'd want frser to call upon space bar. */
 //#define FRSER_FEAT_DBG_CONSOLE
 
