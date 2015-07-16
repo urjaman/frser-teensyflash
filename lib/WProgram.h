@@ -23,7 +23,6 @@
 #include "usb_serial.h"
 
 //#include "WCharacter.h"
-#include "WString.h"
 #include "elapsedMillis.h"
 
 uint16_t makeWord(uint16_t w);
