@@ -41,9 +41,11 @@ extern unsigned long _estack;
 
 
 
-extern int main (void) __attribute__((noinline));
+extern int main (void);
 void ResetHandler(void);
 void _init_Teensyduino_internal_(void);
+
+
 //void __libc_init_array(void);
 //void _init(void)__attribute__((externally_visible));
 
@@ -348,6 +350,7 @@ const uint8_t flashconfigbytes[16] = {
 
 
 
+void ResetHandler_RAMpart(void) __attribute__((noinline,noreturn));
 
 extern void (*__preinit_array_start []) (void) __attribute__((weak));
 extern void (*__preinit_array_end []) (void) __attribute__((weak));
@@ -556,6 +559,13 @@ void ResetHandler(void)
 	SYST_RVR = (F_CPU / 1000) - 1;
 	SYST_CSR = SYST_CSR_CLKSOURCE | SYST_CSR_TICKINT | SYST_CSR_ENABLE;
 
+	ResetHandler_RAMpart();
+}
+
+void ResetHandler_RAMpart(void)
+{
+	int i;
+
 	//init_pins();
 	__enable_irq();
 
@@ -577,6 +587,7 @@ void ResetHandler(void)
 
 	main();
 	while (1) ;
+
 }
 
 char *__brkval = (char *)&_ebss;
