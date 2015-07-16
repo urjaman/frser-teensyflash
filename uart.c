@@ -49,6 +49,9 @@ uint8_t usbs_recv(void) {
 		}
 		c = usb_rxbuf_get();
 		yield();
+		if (c==-1) {
+			asm volatile ("wfi");
+		}
 	} while(c==-1);
 	return c;
 }
