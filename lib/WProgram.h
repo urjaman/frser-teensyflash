@@ -31,14 +31,6 @@ uint16_t makeWord(byte h, byte l);
 
 #define word(...) makeWord(__VA_ARGS__)
 
-// WMath prototypes
-uint32_t random(void);
-uint32_t random(uint32_t howbig);
-int32_t random(int32_t howsmall, int32_t howbig);
-void randomSeed(uint32_t newseed);
-void srandom(uint32_t newseed);
-long map(long, long, long, long, long);
-
 #include "pins_arduino.h"
 
 #endif // __cplusplus
