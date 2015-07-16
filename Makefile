@@ -10,7 +10,7 @@ CDEPS := Makefile $(wildcard lib/*.cpp) $(wildcard lib/*.c) $(wildcard lib/*.h)
 
 TARGET = main
 
-OPTIONS = -DF_CPU=48000000 -DUSB_SERIAL -D__MK20DX256__
+OPTIONS = -DF_CPU=96000000 -DUSB_SERIAL -D__MK20DX256__
 CFLAGS = -Wall -g -Os -mcpu=cortex-m4 -mthumb -nostdlib -fno-strict-aliasing -Ilib $(OPTIONS)
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti $(OPTIONS)
 LDFLAGS = -Os -Wl,--gc-sections -Wl,--relax -mcpu=cortex-m4 -mthumb -Tlib/mk20dx256.ld
