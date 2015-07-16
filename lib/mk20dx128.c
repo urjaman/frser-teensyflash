@@ -347,8 +347,6 @@ const uint8_t flashconfigbytes[16] = {
 
 
 
-static void startup_default_late_hook(void) {}
-void startup_late_hook(void)		__attribute__ ((weak, alias("startup_default_late_hook")));
 
 
 extern void (*__preinit_array_start []) (void) __attribute__((weak));
@@ -577,7 +575,6 @@ void ResetHandler(void)
 	        __init_array_start[i] ();
 
 
-	startup_late_hook();
 	main();
 	while (1) ;
 }
