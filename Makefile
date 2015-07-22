@@ -2,9 +2,9 @@
 # TEENSYDIR = /cygdrive/c/Program\ Files/Arduino/hardware/tools
 
 # Linux example
-TEENSYDIR = /home/urjaman/fakeduino/arduino-1.0.6/hardware/tools
+TEENSYDIR = /home/urjaman/fakeduino/arduino-1.6.5/hardware/tools
 
-TCDIR = $(TEENSYDIR)/arm-none-eabi/bin/
+TCDIR = $(TEENSYDIR)/arm/bin/
 
 CDEPS := Makefile $(wildcard lib/*.cpp) $(wildcard lib/*.c) $(wildcard lib/*.h)
 
@@ -49,7 +49,7 @@ program-win: $(TARGET).hex
 	-$(TEENSYDIR)/teensy_reboot
 
 program-cli: $(TARGET).hex
-	teensy_loader_cli -mmcu=mk20dx256 -w $(TARGET).hex
+	teensy_loader_cli -mmcu=mk20dx256 -s -w $(TARGET).hex
 
 clean:
 	$(MAKE) -C lib clean
