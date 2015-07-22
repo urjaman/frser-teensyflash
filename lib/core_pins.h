@@ -854,17 +854,6 @@ void rtc_set(unsigned long t);
 void rtc_compensate(int adjust);
 #ifdef __cplusplus
 }
-class teensy3_clock_class
-{
-public:
-	static unsigned long get(void) __attribute__((always_inline)) { return rtc_get(); }
-	static void set(unsigned long t) __attribute__((always_inline)) { rtc_set(t); }
-	static void compensate(int adj) __attribute__((always_inline)) { rtc_compensate(adj); }
-};
-extern teensy3_clock_class Teensy3Clock;
 #endif
-
-
-
 
 #endif

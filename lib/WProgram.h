@@ -17,21 +17,4 @@
 #define DMAMEM __attribute__ ((section(".dmabuffers"), used))
 #define FASTRUN __attribute__ ((section(".fastrun")))
 
-#ifdef __cplusplus
-
-#include "avr_emulation.h"
-#include "usb_serial.h"
-
-//#include "WCharacter.h"
-#include "elapsedMillis.h"
-
-uint16_t makeWord(uint16_t w);
-uint16_t makeWord(byte h, byte l);
-
-#define word(...) makeWord(__VA_ARGS__)
-
-#include "pins_arduino.h"
-
-#endif // __cplusplus
-
 #endif // WProgram_h
