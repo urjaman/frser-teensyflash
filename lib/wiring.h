@@ -28,7 +28,6 @@
 //#include <avr/io.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "binary.h"
 #include "core_id.h"
 #include "core_pins.h"
 
