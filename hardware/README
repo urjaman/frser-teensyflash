@@ -9,3 +9,6 @@ pins to the pin holes and dont
 push the pins through the holes,
 just in the holes, because the PLCC
 socket goes above them.
+
+There's a more detailed assembly description at:
+http://flashrom.org/Teensy_3.1_SPI_%2B_LPC/FWH_Flasher
